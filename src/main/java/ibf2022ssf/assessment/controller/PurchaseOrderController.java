@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ibf2022ssf.assessment.model.Item;
 import ibf2022ssf.assessment.model.ShippingAddress;
 import ibf2022ssf.assessment.repository.ItemRepo;
+import ibf2022ssf.assessment.service.ItemService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -19,6 +20,7 @@ public class PurchaseOrderController {
 
     @Autowired
     ItemRepo itmRepo;
+    ItemService itmService;
 
     @GetMapping
      public String getCart(Model model, HttpSession session) {
@@ -56,8 +58,9 @@ public class PurchaseOrderController {
            return "view2";
        }
        session.setAttribute("shippingaddress", shippingAddress);
-
-       
+       List<Item> cart = (List<Item>)session.getAttribute("cart");
+       List<String> items = itmService.listOfItems(cart);
+       Float totalCost = itmService.totalCost(quotation, items);       
        return "view3";
    }
 }
